@@ -1,0 +1,16 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width')
+    title= title
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyD-bl_h8LYxmvb56aSEIyx7tNbo1xt2iqE')
+    script(src='https://hpneo.github.io/gmaps/gmaps.js')
+    block css
+      link(rel='stylesheet', href='/css/style.css')
+    block js
+      if ENV_DEVELOPMENT
+        script(src='http://localhost:35729/livereload.js')
+  body
+    block content

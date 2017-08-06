@@ -1,0 +1,112 @@
+extends ../layout
+block content
+    .container-fluid
+        .row
+            .col-md-3
+                form
+                    h2 Guardar Ruta
+                    .form-group
+                        label(for='exampleInputEmail1') Nombre de ruta
+                        input#exampleInputEmail1.form-control(type='text', placeholder='Nueva Ruta')
+                    .form-group
+                        label(for='exampleInputPassword1') 
+                        select#exampleInputPassword1.form-control
+                            each fleet, i in fleets
+                                option(value=fleet._id)=fleet.name
+                    .form-group
+                        label(for='exampleInputFile') Logo de la Flota
+                        input#exampleInputFile(type='file')
+                    hr
+                    button.btn.btn-success(type='submit') Submit
+            .col-md-9#map
+            .saveTravel#saveTravel
+    
+
+    script.
+        var map,marker_origin, marker_final, route, newroute=[],waypoints=[];
+        var icon_origin = {
+            url:'/img/Marker_green.png',
+            scaledSize: new google.maps.Size(25, 25)
+        }
+        var icon_final = {
+            url:'/img/Marker_red.png',
+            scaledSize: new google.maps.Size(25, 25)
+        }
+        function initMap() {
+            map = new GMaps({
+                div: '#map',
+                lat: 10.947950,
+                lng: -74.785148,
+                click: function(e) {
+                    SetPoint(e)
+                },
+            });
+        }
+
+        var origin =false;
+        var destination = false;
+        function SetPoint(e){
+            
+            if(!origin){
+                marker_origin=  map.addMarker({
+                    lat: e.latLng.lat(),
+                    lng: e.latLng.lng(),
+                    title: 'Lima',
+                    icon:icon_origin,
+                    draggable:true,
+                    dragend: function(e) {
+                        drawLine()
+                    }
+                });
+                origin=true;
+            }else if(origin && !destination){
+                
+                    marker_final =  map.addMarker({
+                        lat: e.latLng.lat(),
+                        lng: e.latLng.lng(),
+                        title: 'Lima',
+                        icon:icon_final,
+                        draggable:true,
+                        dragend: function(e) {
+                            drawLine()
+                        }
+                    });
+                    destination = true;
+                    drawLine()
+                
+            }else{
+                marker_final.setPosition(e.latLng)
+                drawLine()
+            }
+        }
+
+        function drawLine(){
+            map.removePolylines()
+            map.travelRoute({
+                origin: [marker_origin.position.lat(), marker_origin.position.lng()],
+                destination: [marker_final.position.lat(), marker_final.position.lng()],
+                travelMode: 'driving',
+                waypoints: waypoints,
+                step: function(e) {
+                    e.path.forEach(function(item){
+                        newroute.push({lat:item.lat(),lng:item.lng()})
+                    })
+                    route = map.drawPolyline({
+                        path: e.path,
+                        strokeColor: '#131540',
+                        strokeOpacity: 0.6,
+                        strokeWeight: 6
+                    });
+                    
+                }
+            });
+        }
+
+
+        document.querySelector('#saveTravel').addEventListener('click',function(){
+                var lastPoint = newroute[newroute.length -1]
+                waypoints.push({location:{lat:lastPoint.lat,lng:lastPoint.lng},stopover:false})
+            
+            console.log(waypoints)
+        },false)
+        initMap();
