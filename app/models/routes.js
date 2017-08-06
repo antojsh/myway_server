@@ -11,7 +11,7 @@ var FleetSchema = new Schema({
   name: String,
   photo: String,
   loc: {
-        type: { type: String },
+        type: { type: Number },
         coordinates: [Number],
     }
 });
