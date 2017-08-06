@@ -11,7 +11,7 @@ var FleetSchema = new Schema({
   name: String,
   photo: String,
   loc: {
-    type: [], // [<longitude>, <latitude>]
+    type: mongoose.Schema.Types.Mixed, // [<longitude>, <latitude>]
     index: "2dsphere" // create the geospatial index
   }
 });
