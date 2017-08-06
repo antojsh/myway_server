@@ -9,7 +9,7 @@ var config = {
       name: 'mibus-server'
     },
     port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/mibus-server-development'
+    db: 'mongodb://antojsh:antonio199308JSH@ds129183.mlab.com:29183/myway'
   },
 
   test: {

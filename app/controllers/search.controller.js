@@ -88,8 +88,8 @@ function findNear(coors, limit, maxDistance, type) {
       });
   });
 }
-router.get("/:origin/:destination", function (req, res, next) {
-  let maxDistance = req.params.distance || 1000;
+router.get("/:origin/:destination", async function (req, res, next) {
+  let maxDistance = req.params.distance || 10;
   maxDistance /= 6371;
 
   let limit = 3;
@@ -115,8 +115,10 @@ router.get("/:origin/:destination", function (req, res, next) {
           break;
         }
       }
-
-      res.json(findTheBestNearPosition(filterRoutes, origin, destination))
+     findTheBestNearPosition(filterRoutes, origin, destination,function(data){
+      res.json(data)
+     });
+      
 
       //executeGrafo(filterRoutes, res)
     }).catch(err => {
@@ -213,7 +215,7 @@ function executeGrafo(routes, res) {
   res.json(finalGraph)
 }
 
-function findTheBestNearPosition(routes, origin, destination) {
+async function findTheBestNearPosition(routes, origin, destination,callback) {
 
   let rutasEncontradas = routes
   var targetPointOrigin = turf.point([origin[0], origin[1]]);
@@ -242,45 +244,39 @@ function findTheBestNearPosition(routes, origin, destination) {
 
 
 
-    let _indexNearOrigin = indexNearOrigin;
-    let _indexNearDestination = indexNearDestination
 
-    console.log('ANTIGUO ORIGIN ' + _indexNearOrigin)
-    console.log('ANTIGUO DESTINATION ' + _indexNearDestination)
-    if (_indexNearOrigin > _indexNearDestination) {
-      optimizeRoute(rutasEncontradas[i], function (err, optimize) {
-        if (!err) {
-          _indexNearOrigin = optimize.origin
-          _indexNearDestination = optimize.destination
-          console.log('PARCIAL ' + _indexNearOrigin)
-        }
+    rutasEncontradas[i]['near_position_origin'] = indexNearOrigin
+    rutasEncontradas[i]['near_position_destination'] = indexNearDestination
+    console.log('********************************************************')
+    console.log("ANTIGUO ORIGEN " + rutasEncontradas[i]['near_position_origin'])
+    console.log("ANTIGUO DESTINO " + rutasEncontradas[i]['near_position_destination'])
+    if (rutasEncontradas[i]['near_position_origin'] > rutasEncontradas[i]['near_position_destination']) {
 
 
-      })
+      let routesOpimizet = await optimizeRoute(rutasEncontradas[i])
+      rutasEncontradas[i]['near_position_origin'] = routesOpimizet.origin
+      rutasEncontradas[i]['near_position_destination'] = routesOpimizet.destination
 
     }
-    console.log('NUEVA ORIGIN ' + _indexNearOrigin)
-    console.log('NUEVA DESTINATION  ' + _indexNearDestination)
-
-
-    rutasEncontradas[i]['near_position_origin'] = _indexNearOrigin
-    rutasEncontradas[i]['near_position_destination'] = _indexNearDestination
+    console.log("NUEVO ORIGEN " + rutasEncontradas[i]['near_position_origin'])
+    console.log("NUEVO DESTINO " + rutasEncontradas[i]['near_position_destination'])
+    console.log('************************************************************')
 
   }
+  callback(rutasEncontradas)
 
-
-  return rutasEncontradas;
 }
 
 
 
 
-function optimizeRoute(route, callback) {
-  let menor;
-  let posiblesDestination = []
-  let posiblesOrigin = []
-  let coordsFinla;
-  try {
+async function optimizeRoute(route) {
+  return new Promise(function (res, rej) {
+    let menor;
+    let posiblesDestination = []
+    let posiblesOrigin = []
+    let coordsFinla;
+
 
     var fromDestination = turf.point([route.loc[parseInt(route.near_position_destination)][0], route.loc[parseInt(route.near_position_destination)][1]]);
     var fromOrigin = turf.point([route.loc[parseInt(route.near_position_origin)][0], route.loc[parseInt(route.near_position_origin)][1]]);
@@ -291,7 +287,7 @@ function optimizeRoute(route, callback) {
       var distanceOrigin = parseInt(turf.distance(fromOrigin, to, "miles") * 1000)
 
       //console.log(distanceOrigin)
-      if (distanceDestination < 60) {
+      if (distanceDestination < 50 && distanceDestination != 0) {
         //console.log('distanceDestination')
         posiblesDestination.push({
           position: route.loc.findIndex((x) => {
@@ -299,7 +295,7 @@ function optimizeRoute(route, callback) {
           }), distance: distanceDestination
         });
       }
-      if (distanceOrigin < 60) {
+      if (distanceOrigin < 50 && distanceOrigin != 0) {
         //console.log('distanceOrigin')
         posiblesOrigin.push({
           position: route.loc.findIndex((x) => {
@@ -310,27 +306,39 @@ function optimizeRoute(route, callback) {
     }
 
 
-
+    //console.log(posiblesOrigin)
     posiblesOrigin = posiblesOrigin.sort(function (a, b) {
       return parseFloat(a.distance) - parseFloat(b.distance);
     });
 
     posiblesOrigin.forEach(function (element) {
-      if (element.destination < route.near_position_destination) {
+      if (element.position < route.near_position_destination) {
+        //console.log(element.position)
         route.near_position_origin = element.position;
-        callback(false, { origin: element.position, destination: route.near_position_destination })
         return;
       }
     }, this);
 
+    // OPTIMIZE DESTINATION
+    let Destination=null;
+    posiblesDestination.forEach(function(element,i){
+      let resta = element.position -route.near_position_origin
+      if(i==0){
+         Destination = resta
+      }else{
+        if(resta  < Destination && resta >0){
+          Destination = element.position;
+        }
+      }
+    })
+    if(Destination!=null)
+        route.near_position_destination = Destination
+    console.log('LO QUE RETORNA LA PROMESA origin ' + route.near_position_origin + '  DESTINATION ' + route.near_position_destination)
+    res({ origin: route.near_position_origin, destination: route.near_position_destination })
 
-  } catch (err) {
-
-    callback(err)
-  }
+  })
 
 
-  return { origin: route.near_position_origin, destination: route.near_position_destination };
 }
 
 
