@@ -4,40 +4,8 @@ var express = require("express"),
   mongoose = require("mongoose"),
   Fleet = mongoose.model("Fleet"),
   Route = mongoose.model("Route");
-const Graph = require('node-dijkstra')
+// const Graph = require('node-dijkstra')
 const turf = require('turf');
-// Route.find({}, function(err, routes) {
-//   if (!err)
-//     routes.forEach(function(element, index, array) {
-//       for (var i = 0; i < element.loc.length; i++) {
-//         for (var j = element.loc.length - 1; j >= 0; j--) {
-//           training.push({
-//             input: {
-//               olat: element.loc[i][0],
-//               olng: element.loc[i][1],
-//               dlat: element.loc[j][0],
-//               dlng: element.loc[j][1]
-//             },
-//             output: element._id
-//           });
-//         }
-//       }
-//       itemsProcessed++;
-//       if (itemsProcessed === array.length) {
-//         var MyWinnow = limdu.classifiers.Winnow.bind(0, { retrain_count: 10 });
-
-//         var intentClassifier = new limdu.classifiers.multilabel
-//           .BinaryRelevance({
-//           binaryClassifierType: MyWinnow
-//         });
-
-//         intentClassifier.trainBatch(training);
-//       }
-//     }, this);
-// });
-
-// create a DataSet and add test items to appropriate categories
-// this is 'curated' data for training
 
 module.exports = function (app) {
   app.use("/search", router);
@@ -177,43 +145,7 @@ function middlePoint(lat1, lng1, lat2, lng2) {
 }
 
 
-function executeGrafo(routes, res) {
-  let finalGraph = []
-  let resultGraph = {}
-  for (var i = 0; i < routes.length; i++) {
 
-    let countLoc = routes[i].loc.length
-    //console.log(countLoc)
-    for (var j = 0; j < countLoc; j++) {
-      if (j == countLoc - 1) break;
-
-      var from = turf.point([routes[i].loc[j][0], routes[i].loc[j][1]]);
-      var to = turf.point([routes[i].loc[j + 1][0], routes[i].loc[j + 1][1]]);
-
-      var distance = turf.distance(from, to, "kilometers");
-      if (parseInt(distance * 1000) !== 0) {
-        let next = {}
-        next[j + 1] = parseInt(distance * 1000)
-        resultGraph[j] = next
-      }
-    }
-    let route = new Graph(resultGraph);
-
-    let RooutePosible = {
-      graph: route.path(String(routes[i].near_position_origin), String(routes[i].near_position_destination), { cost: true }),
-      route: routes[i]
-    }
-
-    console.log("ANTIGUA " + RooutePosible.route.near_position_destination);
-    RooutePosible.route.near_position_destination = optimizeRoute(RooutePosible)
-    // console.log("LA QUE DEVUELVE "+optimizeRoute(RooutePosible))
-    // console.log('La nueva '+RooutePosible.route.near_position_destination)
-    console.log('NUEVA ' + RooutePosible.route.near_position_destination)
-    finalGraph.push(RooutePosible)
-
-  }
-  res.json(finalGraph)
-}
 
 async function findTheBestNearPosition(routes, origin, destination,callback) {
 
