@@ -12,7 +12,7 @@ var FleetSchema = new Schema({
   photo: String,
   loc: {
         type: { type: Number },
-        coordinates: [Number],
+        coordinates: 'LineString',
     }
 });
 
