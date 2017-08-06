@@ -11,9 +11,9 @@ var FleetSchema = new Schema({
   name: String,
   photo: String,
   loc: {
-    type: {type:"LineString"}, // [<longitude>, <latitude>]
-    index: "2dsphere" // create the geospatial index
-  }
+        type: { type: String },
+        coordinates: [Number],
+    }
 });
 
 //FleetSchema.index({ loc: '2dsphere' });
