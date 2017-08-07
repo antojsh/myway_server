@@ -67,7 +67,7 @@ router.get("/:origin/:destination", async function (req, res, next) {
   let maxDistance = req.params.distance || 10;
   maxDistance /= 6371;
 
-  let limit = 3;
+  let limit = 5;
 
   let origin = req.params.origin.split(",");
   let destination = req.params.destination.split(",");
