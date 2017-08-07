@@ -258,19 +258,19 @@ async function optimizeRoute(route) {
     }, this);
 
     // OPTIMIZE DESTINATION
-    let Destination = null;
-    posiblesDestination.forEach(function (element, i) {
-      let resta = element.position - route.near_position_origin
-      if (i == 0) {
-        Destination = resta
-      } else {
-        if (resta < Destination && resta > 0) {
-          Destination = element.position;
-        }
-      }
-    })
-    if (Destination != null)
-      route.near_position_destination = Destination
+    // let Destination = null;
+    // posiblesDestination.forEach(function (element, i) {
+    //   let resta = element.position - route.near_position_origin
+    //   if (i == 0) {
+    //     Destination = resta
+    //   } else {
+    //     if (resta < Destination && resta > 0) {
+    //       Destination = element.position;
+    //     }
+    //   }
+    // })
+    // if (Destination != null)
+    //   route.near_position_destination = Destination
     console.log('LO QUE RETORNA LA PROMESA origin ' + route.near_position_origin + '  DESTINATION ' + route.near_position_destination)
     res({ origin: route.near_position_origin, destination: route.near_position_destination })
 
