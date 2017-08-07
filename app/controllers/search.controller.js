@@ -20,7 +20,7 @@ function findNear(coors, limit, maxDistance, type) {
         $near:
         {
           $geometry: {
-            type: "LineString",
+            type: "Point",
             coordinates: coors
           },
           $maxDistance: 1
