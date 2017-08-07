@@ -10,7 +10,10 @@ var FleetSchema = new Schema({
   },
   name: String,
   photo: String,
-  loc: mongoose.Schema.Types.LineString,
+  loc: {
+    type: mongoose.Schema.Types.LineString,
+    index: "2dsphere"
+  },
 });
 
 //FleetSchema.index({ loc: '2dsphere' });
