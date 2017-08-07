@@ -97,7 +97,7 @@ router.get("/:origin/:destination", async function (req, res, next) {
 
       //executeGrafo(filterRoutes, res)
     }).catch(err => {
-      console.log(err)
+      console.log("PROMSESA PCINCIOAL "+err)
       res.status(500).send(err);
     })
   } catch (err) {
@@ -166,7 +166,6 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
     if (rutasEncontradas[i].loc)
       for (var j = 0; j < rutasEncontradas[i].loc.coordinates.length; j++) {
         points.push(turf.point([rutasEncontradas[i].loc.coordinates[j][0], rutasEncontradas[i].loc.coordinates[j][1]]))
-        var to = turf.point([route.loc.coordinates[i][0], route.loc.coordinates[i][1]]);
 
       }
 
