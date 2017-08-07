@@ -243,7 +243,7 @@ async function optimizeRoute(route) {
       var distanceOrigin = parseInt(turf.distance(fromOrigin, to, "miles") * 1000)
 
       //console.log(distanceOrigin)
-      if (distanceDestination < 50 && distanceDestination != 0) {
+      if (distanceDestination < 40 && distanceDestination != 0) {
         //console.log('distanceDestination')
         posiblesDestination.push({
           position: route.loc.coordinates.findIndex((x) => {
@@ -251,7 +251,7 @@ async function optimizeRoute(route) {
           }), distance: distanceDestination
         });
       }
-      if (distanceOrigin < 50 && distanceOrigin != 0) {
+      if (distanceOrigin < 40 && distanceOrigin != 0) {
         //console.log('distanceOrigin')
         posiblesOrigin.push({
           position: route.loc.coordinates.findIndex((x) => {
