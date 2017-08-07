@@ -17,8 +17,14 @@ function findNear(coors, limit, maxDistance, type) {
   return new Promise(function (res, rej) {
     Route.find({
       loc: {
-        $near: coors,
-        $maxDistance: maxDistance
+        $near:
+        {
+          $geometry: {
+            type: "LineString",
+            coordinates: coors
+          },
+          $maxDistance: maxDistance
+        }
       }
     }
     )
@@ -83,10 +89,10 @@ router.get("/:origin/:destination", async function (req, res, next) {
           break;
         }
       }
-     findTheBestNearPosition(filterRoutes, origin, destination,function(data){
-      res.json(data)
-     });
-      
+      findTheBestNearPosition(filterRoutes, origin, destination, function (data) {
+        res.json(data)
+      });
+
 
       //executeGrafo(filterRoutes, res)
     }).catch(err => {
@@ -147,7 +153,7 @@ function middlePoint(lat1, lng1, lat2, lng2) {
 
 
 
-async function findTheBestNearPosition(routes, origin, destination,callback) {
+async function findTheBestNearPosition(routes, origin, destination, callback) {
 
   let rutasEncontradas = routes
   var targetPointOrigin = turf.point([origin[0], origin[1]]);
@@ -252,19 +258,19 @@ async function optimizeRoute(route) {
     }, this);
 
     // OPTIMIZE DESTINATION
-    let Destination=null;
-    posiblesDestination.forEach(function(element,i){
-      let resta = element.position -route.near_position_origin
-      if(i==0){
-         Destination = resta
-      }else{
-        if(resta  < Destination && resta >0){
+    let Destination = null;
+    posiblesDestination.forEach(function (element, i) {
+      let resta = element.position - route.near_position_origin
+      if (i == 0) {
+        Destination = resta
+      } else {
+        if (resta < Destination && resta > 0) {
           Destination = element.position;
         }
       }
     })
-    if(Destination!=null)
-        route.near_position_destination = Destination
+    if (Destination != null)
+      route.near_position_destination = Destination
     console.log('LO QUE RETORNA LA PROMESA origin ' + route.near_position_origin + '  DESTINATION ' + route.near_position_destination)
     res({ origin: route.near_position_origin, destination: route.near_position_destination })
 
