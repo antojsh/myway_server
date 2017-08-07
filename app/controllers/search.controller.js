@@ -35,7 +35,7 @@ function findNear(coors, limit, maxDistance, type) {
         if (err) {
           rej(err);
         }
-        //console.log(locations)
+        console.log(locations)
 
         // let rutasEncontradas = locations
         // var targetPoint = turf.point([coors[0], coors[1]]);
