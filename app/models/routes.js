@@ -1,5 +1,5 @@
 // Example model
-
+var GeoJSON = require('mongoose-geojson-schema');
 var mongoose = require("mongoose"),
   Schema = mongoose.Schema;
 
@@ -10,10 +10,7 @@ var FleetSchema = new Schema({
   },
   name: String,
   photo: String,
-  loc: {
-    type: [], // [<longitude>, <latitude>]
-    index: "2dsphere" // create the geospatial index
-  }
+  loc: mongoose.Schema.Types.LineString,
 });
 
 //FleetSchema.index({ loc: '2dsphere' });
