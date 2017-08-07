@@ -262,7 +262,7 @@ async function optimizeRoute(route) {
     let Destination = null;
     posiblesDestination.forEach(function (element, i) {
       let resta = element.position - route.near_position_origin
-      if (i == 0) {
+      if (i == 0 && resta > 0) {
         Destination = resta
       } else {
         if (resta < Destination && resta > 0) {
