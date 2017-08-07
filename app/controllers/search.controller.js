@@ -23,7 +23,7 @@ function findNear(coors, limit, maxDistance, type) {
             type: "Point",
             coordinates: coors
           },
-          $maxDistance: 40
+          $maxDistance: 80
 
         }
       }
