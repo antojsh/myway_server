@@ -194,23 +194,22 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
     // if (rutasEncontradas[i]['near_position_origin'] > rutasEncontradas[i]['near_position_destination']) {
 
 
-    // let routesOpimizet = await optimizeRoute(rutasEncontradas[i])
-    // rutasEncontradas[i]['near_position_origin'] = routesOpimizet.origin
-    // rutasEncontradas[i]['near_position_destination'] = routesOpimizet.destination
+    let routesOpimizet = await optimizeRoute(rutasEncontradas[i])
+    rutasEncontradas[i]['near_position_origin'] = routesOpimizet.origin
+    rutasEncontradas[i]['near_position_destination'] = routesOpimizet.destination
 
     //  }
     console.log("NUEVO ORIGEN " + rutasEncontradas[i]['near_position_origin'])
     console.log("NUEVO DESTINO " + rutasEncontradas[i]['near_position_destination'])
     console.log('************************************************************')
     let Distance = null;
-    for (var i = rutasEncontradas[i]['near_position_origin']; i < rutasEncontradas[i]['near_position_destination']; i++) {
+    for (var i = 0; i < rutasEncontradas[i].loc.coordinates.length; i++) {
 
       var from = turf.point([rutasEncontradas[i].loc.coordinates[i][0], rutasEncontradas[i].loc.coordinates[i][1]]);
       var to = turf.point([rutasEncontradas[i].loc.coordinates[i + 1][0], rutasEncontradas[i].loc.coordinates[i + 1][1]]);
       Distance += parseInt(turf.distance(from, to, "miles") * 1000)
 
     }
-    rutasEncontradas[i]['distance']=Distance
   }
   callback(rutasEncontradas)
 
