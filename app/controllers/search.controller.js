@@ -103,7 +103,9 @@ router.get("/:origin/:destination", async function (req, res, next) {
           route['distance'] = Distance;
         });
 
-        
+        data = data.sort(function (a, b) {
+          return parseFloat(a.distance) - parseFloat(b.distance);
+        });
         res.json(data)
       });
 
