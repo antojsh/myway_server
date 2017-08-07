@@ -263,14 +263,14 @@ async function optimizeRoute(route) {
       return parseFloat(a.distance) + parseFloat(b.distance);
     });
     // OPTIMIZE DESTINATION
-    let Destination = [];
+    let Destination = null;
     posiblesDestination.forEach(function (element, i) {
       if (element.position > route.near_position_origin) {
         route.near_position_destination = element.position;
         return;
       }
     })
-
+    
     if (Destination != null)
       route.near_position_destination = Destination
     console.log('LO QUE RETORNA LA PROMESA origin ' + route.near_position_origin + '  DESTINATION ' + route.near_position_destination)
