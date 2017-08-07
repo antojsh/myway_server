@@ -201,6 +201,7 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
     console.log("NUEVO ORIGEN " + rutasEncontradas[i]['near_position_origin'])
     console.log("NUEVO DESTINO " + rutasEncontradas[i]['near_position_destination'])
     console.log('************************************************************')
+    console.log(rutasEncontradas[i])
     let Distance = null;
     for (var i = rutasEncontradas[i]['near_position_origin']; i <rutasEncontradas[i]['near_position_destination']; i++) {
 
