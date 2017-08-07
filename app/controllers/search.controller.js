@@ -42,7 +42,7 @@ function findNear(coors, limit, maxDistance, type) {
 
         // for (var i = 0; i < rutasEncontradas.length; i++) {
         //   let point = []
-        //   if (rutasEncontradas[i].loc)
+        //   if (rutasEncontradas[i].loc.coordinates)
         //     for (var j = 0; j < rutasEncontradas[i].loc.length; j++) {
         //       point.push(turf.point([rutasEncontradas[i].loc[j][0], rutasEncontradas[i].loc[j][1]]))
         //     }
@@ -163,8 +163,8 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
     let points = []
 
     if (rutasEncontradas[i].loc)
-      for (var j = 0; j < rutasEncontradas[i].loc.length; j++) {
-        points.push(turf.point([rutasEncontradas[i].loc[j][0], rutasEncontradas[i].loc[j][1]]))
+      for (var j = 0; j < rutasEncontradas[i].loc.coordinates.length; j++) {
+        points.push(turf.point([rutasEncontradas[i].loc.coordinates[j][0], rutasEncontradas[i].loc.coordinates[j][1]]))
       }
 
     let pointsTurf = turf.featureCollection(points);
@@ -172,11 +172,11 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
     let nearestDestination = turf.nearest(targetPointDestination, pointsTurf);
 
 
-    let indexNearOrigin = rutasEncontradas[i].loc.findIndex((x) => {
+    let indexNearOrigin = rutasEncontradas[i].loc.coordinates.findIndex((x) => {
       return x[0] == nearestOrigin.geometry.coordinates[0]
     });
 
-    let indexNearDestination = rutasEncontradas[i].loc.findIndex((x) => {
+    let indexNearDestination = rutasEncontradas[i].loc.coordinates.findIndex((x) => {
       return x[0] == nearestDestination.geometry.coordinates[0]
     });
 
@@ -216,11 +216,11 @@ async function optimizeRoute(route) {
     let coordsFinla;
 
 
-    var fromDestination = turf.point([route.loc[parseInt(route.near_position_destination)][0], route.loc[parseInt(route.near_position_destination)][1]]);
-    var fromOrigin = turf.point([route.loc[parseInt(route.near_position_origin)][0], route.loc[parseInt(route.near_position_origin)][1]]);
+    var fromDestination = turf.point([route.loc.coordinates[parseInt(route.near_position_destination)][0], route.loc.coordinates[parseInt(route.near_position_destination)][1]]);
+    var fromOrigin = turf.point([route.loc.coordinates[parseInt(route.near_position_origin)][0], route.loc.coordinates[parseInt(route.near_position_origin)][1]]);
 
     for (var i = 0; i < route.loc.length; i++) {
-      var to = turf.point([route.loc[i][0], route.loc[i][1]]);
+      var to = turf.point([route.loc.coordinates[i][0], route.loc.coordinates[i][1]]);
       var distanceDestination = parseInt(turf.distance(fromDestination, to, "miles") * 1000)
       var distanceOrigin = parseInt(turf.distance(fromOrigin, to, "miles") * 1000)
 
@@ -229,7 +229,7 @@ async function optimizeRoute(route) {
         //console.log('distanceDestination')
         posiblesDestination.push({
           position: route.loc.findIndex((x) => {
-            return x == route.loc[i]
+            return x == route.loc.coordinates[i]
           }), distance: distanceDestination
         });
       }
@@ -237,7 +237,7 @@ async function optimizeRoute(route) {
         //console.log('distanceOrigin')
         posiblesOrigin.push({
           position: route.loc.findIndex((x) => {
-            return x == route.loc[i]
+            return x == route.loc.coordinates[i]
           }), distance: distanceOrigin
         });
       }
