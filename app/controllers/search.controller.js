@@ -202,7 +202,7 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
     console.log("NUEVO DESTINO " + rutasEncontradas[i]['near_position_destination'])
     console.log('************************************************************')
     let Distance = null;
-    for (var i = 0; i < rutasEncontradas[i].loc.coordinates.length; i++) {
+    for (var i = rutasEncontradas[i]['near_position_origin']; i <rutasEncontradas[i]['near_position_destination']; i++) {
 
       var from = turf.point([rutasEncontradas[i].loc.coordinates[i][0], rutasEncontradas[i].loc.coordinates[i][1]]);
       var to = turf.point([rutasEncontradas[i].loc.coordinates[i + 1][0], rutasEncontradas[i].loc.coordinates[i + 1][1]]);
