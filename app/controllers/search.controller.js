@@ -23,7 +23,7 @@ function findNear(coors, limit, maxDistance, type) {
             type: "Point",
             coordinates: coors
           },
-          $maxDistance: 1000
+          $maxDistance: 500
 
         }
       }
@@ -192,9 +192,9 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
     // if (rutasEncontradas[i]['near_position_origin'] > rutasEncontradas[i]['near_position_destination']) {
 
 
-      let routesOpimizet = await optimizeRoute(rutasEncontradas[i])
-      rutasEncontradas[i]['near_position_origin'] = routesOpimizet.origin
-      rutasEncontradas[i]['near_position_destination'] = routesOpimizet.destination
+    let routesOpimizet = await optimizeRoute(rutasEncontradas[i])
+    rutasEncontradas[i]['near_position_origin'] = routesOpimizet.origin
+    rutasEncontradas[i]['near_position_destination'] = routesOpimizet.destination
 
     //  }
     console.log("NUEVO ORIGEN " + rutasEncontradas[i]['near_position_origin'])
@@ -263,23 +263,14 @@ async function optimizeRoute(route) {
       return parseFloat(a.distance) + parseFloat(b.distance);
     });
     // OPTIMIZE DESTINATION
-    let Destination = null;
+    let Destination = [];
     posiblesDestination.forEach(function (element, i) {
-      // let resta = element.position - route.near_position_origin
-      // if (i == 0 && restas > 0) {
-      //   Destination = resta
-      // } else {
-      //   if (resta < Destination && resta > 0) {
-      //     Destination = element.position;
-      //   }
-      // }
       if (element.position > route.near_position_origin) {
-        //console.log(element.position)
         route.near_position_destination = element.position;
         return;
       }
-
     })
+
     if (Destination != null)
       route.near_position_destination = Destination
     console.log('LO QUE RETORNA LA PROMESA origin ' + route.near_position_origin + '  DESTINATION ' + route.near_position_destination)
