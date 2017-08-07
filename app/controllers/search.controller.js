@@ -23,7 +23,7 @@ function findNear(coors, limit, maxDistance, type) {
             type: "Point",
             coordinates: coors
           },
-          $maxDistance: 1000
+          $maxDistance: 200
         }
       }
     }
@@ -219,7 +219,7 @@ async function optimizeRoute(route) {
     var fromDestination = turf.point([route.loc.coordinates[parseInt(route.near_position_destination)][0], route.loc.coordinates[parseInt(route.near_position_destination)][1]]);
     var fromOrigin = turf.point([route.loc.coordinates[parseInt(route.near_position_origin)][0], route.loc.coordinates[parseInt(route.near_position_origin)][1]]);
 
-    for (var i = 0; i < route.loc.length; i++) {
+    for (var i = 0; i < route.loc.coordinates.length; i++) {
       var to = turf.point([route.loc.coordinates[i][0], route.loc.coordinates[i][1]]);
       var distanceDestination = parseInt(turf.distance(fromDestination, to, "miles") * 1000)
       var distanceOrigin = parseInt(turf.distance(fromOrigin, to, "miles") * 1000)
