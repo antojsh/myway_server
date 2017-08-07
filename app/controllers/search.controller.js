@@ -228,7 +228,7 @@ async function optimizeRoute(route) {
       if (distanceDestination < 50 && distanceDestination != 0) {
         //console.log('distanceDestination')
         posiblesDestination.push({
-          position: route.loc.findIndex((x) => {
+          position: route.loc.coordinates.findIndex((x) => {
             return x == route.loc.coordinates[i]
           }), distance: distanceDestination
         });
@@ -236,7 +236,7 @@ async function optimizeRoute(route) {
       if (distanceOrigin < 50 && distanceOrigin != 0) {
         //console.log('distanceOrigin')
         posiblesOrigin.push({
-          position: route.loc.findIndex((x) => {
+          position: route.loc.coordinates.findIndex((x) => {
             return x == route.loc.coordinates[i]
           }), distance: distanceOrigin
         });
