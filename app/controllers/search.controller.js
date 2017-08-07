@@ -166,6 +166,8 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
     if (rutasEncontradas[i].loc)
       for (var j = 0; j < rutasEncontradas[i].loc.coordinates.length; j++) {
         points.push(turf.point([rutasEncontradas[i].loc.coordinates[j][0], rutasEncontradas[i].loc.coordinates[j][1]]))
+        var to = turf.point([route.loc.coordinates[i][0], route.loc.coordinates[i][1]]);
+
       }
 
     let pointsTurf = turf.featureCollection(points);
@@ -200,7 +202,15 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
     console.log("NUEVO ORIGEN " + rutasEncontradas[i]['near_position_origin'])
     console.log("NUEVO DESTINO " + rutasEncontradas[i]['near_position_destination'])
     console.log('************************************************************')
+    let Distance = null;
+    for (var i = rutasEncontradas[i]['near_position_origin']; i < rutasEncontradas[i]['near_position_destination']; i++) {
 
+      var from = turf.point([rutasEncontradas[i].loc.coordinates[i][0], rutasEncontradas[i].loc.coordinates[i][1]]);
+      var to = turf.point([rutasEncontradas[i].loc.coordinates[i + 1][0], rutasEncontradas[i].loc.coordinates[i + 1][1]]);
+      Distance += parseInt(turf.distance(from, to, "miles") * 1000)
+
+    }
+    rutasEncontradas[i]['distance']=Distance
   }
   callback(rutasEncontradas)
 
@@ -270,7 +280,7 @@ async function optimizeRoute(route) {
         return;
       }
     })
-    
+
     if (Destination != null)
       route.near_position_destination = Destination
     console.log('LO QUE RETORNA LA PROMESA origin ' + route.near_position_origin + '  DESTINATION ' + route.near_position_destination)
