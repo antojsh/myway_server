@@ -258,17 +258,27 @@ async function optimizeRoute(route) {
       }
     }, this);
 
+
+    posiblesDestination = posiblesDestination.sort(function (a, b) {
+      return parseFloat(a.distance) + parseFloat(b.distance);
+    });
     // OPTIMIZE DESTINATION
     let Destination = null;
     posiblesDestination.forEach(function (element, i) {
-      let resta = element.position - route.near_position_origin
-      if (i == 0 && resta > 0) {
-        Destination = resta
-      } else {
-        if (resta < Destination && resta > 0) {
-          Destination = element.position;
-        }
+      // let resta = element.position - route.near_position_origin
+      // if (i == 0 && restas > 0) {
+      //   Destination = resta
+      // } else {
+      //   if (resta < Destination && resta > 0) {
+      //     Destination = element.position;
+      //   }
+      // }
+      if (element.position > route.near_position_origin) {
+        //console.log(element.position)
+        route.near_position_destination = element.position;
+        return;
       }
+
     })
     if (Destination != null)
       route.near_position_destination = Destination
