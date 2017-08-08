@@ -38,27 +38,6 @@ function findNear(coors, limit, maxDistance, type) {
         }
         console.log(locations)
 
-        // let rutasEncontradas = locations
-        // var targetPoint = turf.point([coors[0], coors[1]]);
-
-        // for (var i = 0; i < rutasEncontradas.length; i++) {
-        //   let point = []
-        //   if (rutasEncontradas[i].loc.coordinates)
-        //     for (var j = 0; j < rutasEncontradas[i].loc.length; j++) {
-        //       point.push(turf.point([rutasEncontradas[i].loc[j][0], rutasEncontradas[i].loc[j][1]]))
-        //     }
-        //   var points = turf.featureCollection(point);
-        //   var nearest = turf.nearest(targetPoint, points);
-
-        //   rutasEncontradas[i]['near_position_' + type] = rutasEncontradas[i].loc.findIndex((x) => {
-        //     return x[0] == nearest.geometry.coordinates[0]
-        //   });
-        //   rutasEncontradas[i][type] = nearest.geometry.coordinates;
-        //   rutasEncontradas[i].type = type
-        //   //console.log(rutasEncontradas[i].near_position )
-        //   //console.log(type)
-        // }
-        // //console.log(rutasEncontradas[0].near)
         res(locations);
       });
   });
@@ -208,7 +187,7 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
     // if (rutasEncontradas[i]['near_position_origin'] > rutasEncontradas[i]['near_position_destination']) {
 
 
-    let routesOpimizet = await optimizeRoute(rutasEncontradas[i])
+    let routesOpimizet = await optimizeRoute(rutasEncontradas[i],destination)
     rutasEncontradas[i]['near_position_origin'] = routesOpimizet.origin
     rutasEncontradas[i]['near_position_destination'] = routesOpimizet.destination
 
@@ -226,7 +205,7 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
 
 
 
-async function optimizeRoute(route) {
+async function optimizeRoute(route,user_destination) {
   return new Promise(function (res, rej) {
     let menor;
     let posiblesDestination = []
@@ -280,16 +259,37 @@ async function optimizeRoute(route) {
       return parseFloat(a.distance) + parseFloat(b.distance);
     });
     // OPTIMIZE DESTINATION
-    let Destination = null;
+    let Destination = [];
     posiblesDestination.forEach(function (element, i) {
-      if (element.position > route.near_position_origin) {
-        route.near_position_destination = element.position;
-        return;
-      }
+      let resta = element.position -route.near_position_origin
+      if(resta > 0)
+        destination.push({
+          resta:resta,
+          position:position
+        })
+    });
+
+    Destination = Destination.sort(function(a,b){
+      return a.resta - b.resta;
     })
 
-    if (Destination != null)
-      route.near_position_destination = Destination
+    let MenosDistance=[]
+    for(var i=0; i< 5; i++){
+      var from = turf.point([user_destination[0], user_destination[i]]);
+      var to = turf.point([route.loc.coordinates[Destination[i].position][0], route.loc.coordinates[Destination[i].position][1]]);
+      var distanceDestination = parseInt(turf.distance(fromDestination, to, "miles") * 1000)
+      MenosDistance.push({
+        distance:distanceDestination,
+        position:Destination[i].position
+      })
+    }
+
+    MenosDistance = MenosDistance.sort(function(a,b){
+      return a.distance - b.distance
+    })
+
+    if (MenosDistance != [])
+      route.near_position_destination = MenosDistance[0].position
     console.log('LO QUE RETORNA LA PROMESA origin ' + route.near_position_origin + '  DESTINATION ' + route.near_position_destination)
     res({ origin: route.near_position_origin, destination: route.near_position_destination })
 
