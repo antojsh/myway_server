@@ -23,7 +23,7 @@ function findNear(coors, limit, maxDistance, type) {
             type: "Point",
             coordinates: coors
           },
-          $maxDistance: 120
+          $maxDistance: 160
 
         }
       }
@@ -222,7 +222,7 @@ async function optimizeRoute(route,user_destination) {
       var distanceOrigin = parseInt(turf.distance(fromOrigin, to, "miles") * 1000)
 
       //console.log(distanceOrigin)
-      if (distanceDestination < 40 && distanceDestination != 0) {
+      if (distanceDestination < 30 && distanceDestination != 0) {
         //console.log('distanceDestination')
         posiblesDestination.push({
           position: route.loc.coordinates.findIndex((x) => {
@@ -230,7 +230,7 @@ async function optimizeRoute(route,user_destination) {
           }), distance: distanceDestination
         });
       }
-      if (distanceOrigin < 40 && distanceOrigin != 0) {
+      if (distanceOrigin < 30 && distanceOrigin != 0) {
         //console.log('distanceOrigin')
         posiblesOrigin.push({
           position: route.loc.coordinates.findIndex((x) => {
