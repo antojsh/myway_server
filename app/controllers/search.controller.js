@@ -279,7 +279,7 @@ async function optimizeRoute(route,user_destination) {
     })
 
     let MenosDistance=[]
-    for(var i=0; i< 5; i++){
+    for(var i=0; i< Destination.length; i++){
       var from = turf.point([user_destination[0], user_destination[i]]);
       var to = turf.point([route.loc.coordinates[Destination[i].position][0], route.loc.coordinates[Destination[i].position][1]]);
       var distanceDestination = parseInt(turf.distance(from, to, "miles") * 1000)
