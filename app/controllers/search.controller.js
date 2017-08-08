@@ -265,7 +265,7 @@ async function optimizeRoute(route,user_destination) {
       if(resta > 0)
         Destination.push({
           resta:resta,
-          position:position
+          position:element.position
         })
     });
 
