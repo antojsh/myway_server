@@ -270,7 +270,7 @@ async function optimizeRoute(route,user_destination) {
     });
 
     console.log('RESTA')
-    console.log()
+    console.log(Destination)
 
     Destination = Destination.sort(function(a,b){
       return a.resta - b.resta;
@@ -286,7 +286,8 @@ async function optimizeRoute(route,user_destination) {
         position:Destination[i].position
       })
     }
-
+    console.log('MENOS DISTANCE')
+    console.log(MenosDistance)
     MenosDistance = MenosDistance.sort(function(a,b){
       return a.distance - b.distance
     })
