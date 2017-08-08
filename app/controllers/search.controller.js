@@ -263,11 +263,14 @@ async function optimizeRoute(route,user_destination) {
     posiblesDestination.forEach(function (element, i) {
       let resta = element.position -route.near_position_origin
       if(resta > 0)
-        destination.push({
+        Destination.push({
           resta:resta,
           position:position
         })
     });
+
+    console.log('RESTA')
+    console.log()
 
     Destination = Destination.sort(function(a,b){
       return a.resta - b.resta;
