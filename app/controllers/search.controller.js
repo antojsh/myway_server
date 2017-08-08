@@ -262,7 +262,9 @@ async function optimizeRoute(route,user_destination) {
     let Destination = [];
     posiblesDestination.forEach(function (element, i) {
       let resta = element.position -route.near_position_origin
+      console.log(resta)
       if(resta > 0)
+        
         Destination.push({
           resta:resta,
           position:element.position
