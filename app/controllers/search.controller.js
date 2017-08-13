@@ -31,6 +31,7 @@ function findNear(coors, limit, maxDistance, type) {
     )
       .lean()
       //.select("name photo")
+      .populate('fleet')
       .limit(limit)
       .exec(function (err, locations) {
         if (err) {
