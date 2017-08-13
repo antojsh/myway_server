@@ -188,10 +188,15 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
     // if (rutasEncontradas[i]['near_position_origin'] > rutasEncontradas[i]['near_position_destination']) {
 
     if (rutasEncontradas[i]['near_position_origin'] > rutasEncontradas[i]['near_position_destination']) {
-      let routesOpimizet = await optimizeRoute(rutasEncontradas[i], destination)
+      let routesOpimizet = await optimizeRoute(rutasEncontradas[i], destination, true)
       rutasEncontradas[i]['near_position_origin'] = routesOpimizet.origin
       rutasEncontradas[i]['near_position_destination'] = routesOpimizet.destination
+    } else {
+      let routesOpimizet = await optimizeRoute(rutasEncontradas[i], destination, false)
+      rutasEncontradas[i]['near_position_destination'] = routesOpimizet.destination
     }
+
+
     //  }
     console.log("NUEVO ORIGEN " + rutasEncontradas[i]['near_position_origin'])
     console.log("NUEVO DESTINO " + rutasEncontradas[i]['near_position_destination'])
@@ -206,7 +211,7 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
 
 
 
-async function optimizeRoute(route, user_destination) {
+async function optimizeRoute(route, user_destination, oirigin) {
   return new Promise(function (res, rej) {
     let menor;
     let posiblesDestination = []
@@ -243,17 +248,20 @@ async function optimizeRoute(route, user_destination) {
 
 
     //console.log(posiblesOrigin)
-    posiblesOrigin = posiblesOrigin.sort(function (a, b) {
-      return parseFloat(a.distance) - parseFloat(b.distance);
-    });
+    if (oirigin) {
+      posiblesOrigin = posiblesOrigin.sort(function (a, b) {
+        return parseFloat(a.distance) - parseFloat(b.distance);
+      });
 
-    posiblesOrigin.forEach(function (element) {
-      if (element.position < route.near_position_destination) {
-        //console.log(element.position)
-        route.near_position_origin = element.position;
-        return;
-      }
-    }, this);
+      posiblesOrigin.forEach(function (element) {
+        if (element.position < route.near_position_destination) {
+          //console.log(element.position)
+          route.near_position_origin = element.position;
+          return;
+        }
+      }, this);
+    }
+
 
 
     posiblesDestination = posiblesDestination.sort(function (a, b) {
