@@ -295,7 +295,7 @@ async function optimizeRoute(route, user_destination) {
       return a.distance - b.distance
     })
 
-    if (MenosDistance != [])
+    if (MenosDistance.length > 0)
       route.near_position_destination = MenosDistance[0].position
     console.log('LO QUE RETORNA LA PROMESA origin ' + route.near_position_origin + '  DESTINATION ' + route.near_position_destination)
     res({ origin: route.near_position_origin, destination: route.near_position_destination })
