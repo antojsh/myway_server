@@ -186,10 +186,10 @@ async function findTheBestNearPosition(routes, origin, destination, callback) {
     console.log("ANTIGUO DESTINO " + rutasEncontradas[i]['near_position_destination'])
     // if (rutasEncontradas[i]['near_position_origin'] > rutasEncontradas[i]['near_position_destination']) {
 
-
-    let routesOpimizet = await optimizeRoute(rutasEncontradas[i],destination)
-    rutasEncontradas[i]['near_position_origin'] = routesOpimizet.origin
-    rutasEncontradas[i]['near_position_destination'] = routesOpimizet.destination
+    if(rutasEncontradas[i]['near_position_origin'] > rutasEncontradas[i]['near_position_destination'])
+        let routesOpimizet = await optimizeRoute(rutasEncontradas[i],destination)
+        rutasEncontradas[i]['near_position_origin'] = routesOpimizet.origin
+        rutasEncontradas[i]['near_position_destination'] = routesOpimizet.destination
 
     //  }
     console.log("NUEVO ORIGEN " + rutasEncontradas[i]['near_position_origin'])
