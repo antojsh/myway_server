@@ -273,7 +273,7 @@ async function optimizeRoute(route, user_destination, user_origin) {
     }
 
     
-    ledestinooptimizado = await optimizeSentido(posiblesOrigin,route.loc.coordinates,user_destination)
+    let destinooptimizado = await optimizeSentido(posiblesOrigin,route.loc.coordinates,user_destination)
 
     if (ledestinooptimizado.length > 0) {
       route.near_position_destination = ledestinooptimizado[0].position
